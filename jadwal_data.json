@@ -1,0 +1,15 @@
+{
+  "courses": [
+    {
+      "id": 1,
+      "name": "Pemrograman",
+      "code": "O011",
+      "day": "Selasa",
+      "start": "09:30",
+      "end": "11:50",
+      "room": "D5 03",
+      "lecturer": "Handoko",
+      "sks": 3
+    }
+  ]
+}

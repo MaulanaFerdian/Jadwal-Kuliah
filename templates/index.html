@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Kuliahku</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="#" data-page="beranda">🎓 Jadwal Kuliahku</a>
+        <nav class="nav">
+            <button class="nav-link active" data-page="beranda">Beranda</button>
+            <button class="nav-link" data-page="jadwal">Jadwal</button>
+            <button class="nav-link" data-page="matakuliah">Mata Kuliah</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section id="page-beranda" class="page">
+            <div class="welcome">
+                <div>
+                    <p class="eyebrow">DASHBOARD MAHASISWA</p>
+                    <h1>Halo! 👋</h1>
+                    <p class="muted">Atur jadwal kuliahmu supaya kegiatan belajar lebih terarah.</p>
+                </div>
+                <button class="primary-button" id="quick-add">+ Tambah jadwal</button>
+            </div>
+
+            <div class="summary-grid">
+                <article class="summary-card">
+                    <span class="summary-label">Mata kuliah</span>
+                    <strong id="summary-courses">0</strong>
+                    <span class="muted small">Terdaftar</span>
+                </article>
+                <article class="summary-card">
+                    <span class="summary-label">Total SKS</span>
+                    <strong id="summary-sks">0</strong>
+                    <span class="muted small">Dari semua mata kuliah</span>
+                </article>
+                <article class="summary-card">
+                    <span class="summary-label">Hari kuliah</span>
+                    <strong id="summary-days">0</strong>
+                    <span class="muted small">Hari terisi</span>
+                </article>
+            </div>
+
+            <section class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Jadwal kuliah</h2>
+                        <p class="muted small">Ringkasan seluruh jadwal yang sudah kamu masukkan.</p>
+                    </div>
+                    <button class="secondary-button" data-page="jadwal">Lihat jadwal</button>
+                </div>
+                <div id="home-schedule" class="schedule-list"></div>
+            </section>
+        </section>
+
+        <section id="page-jadwal" class="page hidden">
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">PERENCANAAN MINGGUAN</p>
+                    <h1>Jadwal Kuliah</h1>
+                    <p class="muted">Pilih hari untuk melihat kelas yang terjadwal.</p>
+                </div>
+                <button class="primary-button" id="schedule-add">+ Tambah jadwal</button>
+            </div>
+            <div class="panel">
+                <label for="day-filter">Tampilkan hari</label>
+                <select id="day-filter">
+                    <option value="Semua">Semua hari</option>
+                    <option>Senin</option><option>Selasa</option><option>Rabu</option>
+                    <option>Kamis</option><option>Jumat</option><option>Sabtu</option><option>Minggu</option>
+                </select>
+                <div id="schedule-list" class="schedule-list"></div>
+            </div>
+        </section>
+
+        <section id="page-matakuliah" class="page hidden">
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">DATA AKADEMIK</p>
+                    <h1>Mata Kuliah</h1>
+                    <p class="muted">Tambah, edit, dan hapus jadwal mata kuliah.</p>
+                </div>
+                <button class="primary-button" id="course-add">+ Tambah mata kuliah</button>
+            </div>
+            <div class="panel">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>Mata kuliah</th><th>Hari</th><th>Waktu</th><th>SKS</th><th>Aksi</th></tr>
+                        </thead>
+                        <tbody id="course-table"></tbody>
+                    </table>
+                </div>
+                <p id="empty-table" class="muted empty-state hidden">Belum ada mata kuliah. Tambahkan data pertamamu.</p>
+            </div>
+        </section>
+    </main>
+
+    <dialog id="course-dialog">
+        <form id="course-form">
+            <div class="dialog-heading">
+                <div>
+                    <p class="eyebrow">FORMULIR</p>
+                    <h2 id="dialog-title">Tambah mata kuliah</h2>
+                </div>
+                <button type="button" class="icon-button" id="close-dialog" aria-label="Tutup">✕</button>
+            </div>
+            <input type="hidden" id="course-id">
+            <div class="form-grid">
+                <div class="field full">
+                    <label for="course-name">Nama mata kuliah *</label>
+                    <input id="course-name" required maxlength="100" placeholder="Contoh: Pemrograman Dasar">
+                </div>
+                <div class="field">
+                    <label for="course-code">Kode mata kuliah *</label>
+                    <input id="course-code" required maxlength="20" placeholder="Contoh: TI101">
+                </div>
+                <div class="field">
+                    <label for="course-sks">Jumlah SKS *</label>
+                    <input id="course-sks" type="number" min="1" max="6" value="3" required>
+                </div>
+                <div class="field">
+                    <label for="course-day">Hari *</label>
+                    <select id="course-day" required>
+                        <option value="">Pilih hari</option>
+                        <option>Senin</option><option>Selasa</option><option>Rabu</option>
+                        <option>Kamis</option><option>Jumat</option><option>Sabtu</option><option>Minggu</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="course-room">Ruangan *</label>
+                    <input id="course-room" required maxlength="80" placeholder="Contoh: Ruang 202">
+                </div>
+                <div class="field">
+                    <label for="course-start">Jam mulai *</label>
+                    <input id="course-start" type="time" value="08:00" required>
+                </div>
+                <div class="field">
+                    <label for="course-end">Jam selesai *</label>
+                    <input id="course-end" type="time" value="09:40" required>
+                </div>
+                <div class="field full">
+                    <label for="course-lecturer">Nama dosen (opsional)</label>
+                    <input id="course-lecturer" maxlength="100" placeholder="Nama dosen pengampu">
+                </div>
+            </div>
+            <p class="form-note">Kolom bertanda * wajib diisi. Sistem akan memberi peringatan jika jadwal bertabrakan.</p>
+            <p id="form-error" class="error-message hidden"></p>
+            <div class="dialog-actions">
+                <button type="button" class="secondary-button" id="cancel-dialog">Batal</button>
+                <button type="submit" class="primary-button">Simpan</button>
+            </div>
+        </form>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <footer><p>Project percobaan • Jadwal Kuliahku</p></footer>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
